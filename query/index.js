@@ -8,6 +8,11 @@ const app = express();
 app.use(bodyParser.json());
 app.use(cors());
 
-app.listen(4006, () => {
-  console.log("query listening to port 4006");
+app.post("/events", (req, res) => {
+  console.log(req.body.type);
+  res.send("ok");
+});
+
+app.listen(4005, () => {
+  console.log("query listening to port 4005");
 });

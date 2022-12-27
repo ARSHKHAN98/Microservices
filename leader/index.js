@@ -23,10 +23,15 @@ app.post("/users/:id/leader", async (req, res) => {
   await axios.post("http:/localhost:4001/users/" + userid, user.data).catch((e) => console.log(e.message));
   res.send(leaderboard[points]);
 
-  // await axios.post("http://localhost:4005/events", {
-  //   type: "LeaderPoints",
-  //   data: user,
-  // });
+  await axios.post("http://localhost:4000/events", {
+    type: "LeaderPoints",
+    data: user,
+  });
+});
+
+app.post("/events", (req, res) => {
+  console.log(req.body.type);
+  res.send("ok");
 });
 
 app.listen(4004, () => {

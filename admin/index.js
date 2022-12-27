@@ -27,7 +27,7 @@ app.get("/users/:id", (req, res) => {
 app.post("/users/:id", (req, res) => {
   const { id, name, points } = req.body;
   users[id] = { id, name, points };
-  console.log(users[id]);
+  // console.log(users[id]);
   res.send(users[id]);
 });
 
@@ -42,7 +42,21 @@ app.post("/users", async (req, res) => {
     points: 0,
   };
 
+  await axios.post("http:/localhost:4000/events", {
+    type: "UserCreated",
+    data: {
+      id,
+      name,
+      points: 0,
+    },
+  });
+
   res.status(201).send(users[id]);
+});
+
+app.post("/events", (req, res) => {
+  console.log(req.body.type);
+  res.send("ok");
 });
 
 app.listen(4001, () => {

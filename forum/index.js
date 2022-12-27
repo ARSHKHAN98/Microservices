@@ -27,16 +27,21 @@ app.post("/users/:id/forums", async (req, res) => {
   forum.push({ id: forumid, data });
   forums[req.params.id] = forum;
 
-  // await axios.post("http://localhost:4005/events", {
-  //   type: "ForumCreated",
-  //   data: {
-  //     id: formid,
-  //     data,
-  //     leaderid: req.params.id,
-  //   },
-  // });
+  await axios.post("http://localhost:4000/events", {
+    type: "ForumCreated",
+    data: {
+      id: forumid,
+      data,
+      leaderid: req.params.id,
+    },
+  });
 
   res.status(201).send(forums);
+});
+
+app.post("/events", (req, res) => {
+  console.log(req.body.type);
+  res.send("ok");
 });
 
 app.listen(4003, () => {
