@@ -11,10 +11,7 @@ app.use(cors());
 
 mongoose.set("strictQuery", false);
 mongoose
-  .connect(
-    "mongodb+srv://arshkhan98:arshkhan98@cluster0.ryq4vz9.mongodb.net/test",
-    { useNewUrlParser: true, useUnifiedTopology: true }
-  )
+  .connect("mongodb+srv://arshkhan98:arshkhan98@cluster0.ryq4vz9.mongodb.net/test", { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log("SUCCESS"))
   .catch((error) => console.log(error.message));
 
@@ -29,8 +26,8 @@ app.get("/users/platforms", (req, res) => {
 app.post("/users/platforms", (req, res) => {
   const platformid = randomBytes(4).toString("hex");
   const { data } = req.body;
-  platforms[id] = { id: platformid, data };
-  res.send(platforms[id]);
+  platforms[platformid] = { id: platformid, data };
+  res.send(platforms[platformid]);
 });
 
 app.delete("/users/platforms", (req, res) => {});
@@ -55,24 +52,24 @@ app.get("/users/:platformid/:gameid/level", (req, res) => {
   res.send(levels[req.params.platformid][req.params.gameid]);
 });
 
-app.post("/users/:platformid/:gameid/level", async (req, res) => {
+app.post("/users/:gameid/level", async (req, res) => {
   const lvlid = randomBytes(4).toString("hex");
   const { data } = req.body;
 
-  const level = levels[req.params.platformid][req.params.gameid] || [];
+  const level = levels[req.params.gameid] || [];
   level.push({ id: lvlid, data });
-  levels[req.params.platformid][req.params.gameid] = level;
-  res.send(levels[req.params.platformid][req.params.gameid]);
+  levels[req.params.gameid] = level;
+  res.send(levels[req.params.gameid]);
 
-  await axios.post("http://localhost:4005/events", {
-    type: "LevelCreated",
-    data: {
-      id,
-      platformid: req.params.platformid,
-      gameid: req.params.gameid,
-      points,
-    },
-  });
+  // await axios.post("http://localhost:4005/events", {
+  //   type: "LevelCreated",
+  //   data: {
+  //     id,
+  //     platformid: req.params.platformid,
+  //     gameid: req.params.gameid,
+  //     points,
+  //   },
+  // });
 });
 
 app.delete("/users/:platformid/:gameid/level", (req, res) => {});

@@ -16,16 +16,17 @@ app.get("/users/leader", (req, res) => {
 
 app.post("/users/:id/leader", async (req, res) => {
   const userid = req.params.id;
-  const user = await axios.get("http://localhost:4001/:userid");
+  const user = await axios.get("http:/localhost:4001/users/" + userid);
   const { points } = req.body;
-  user.points = points;
-  leaderboard[points].push(user);
-  await axios.post("http://localhost:4001/:userid", user);
+  user.data.points = points;
+  leaderboard[points] = user.data;
+  await axios.post("http:/localhost:4001/users/" + userid, user.data).catch((e) => console.log(e.message));
+  res.send(leaderboard[points]);
 
-  await axios.post("http://localhost:4005/events", {
-    type: "LeaderPoints",
-    data: user,
-  });
+  // await axios.post("http://localhost:4005/events", {
+  //   type: "LeaderPoints",
+  //   data: user,
+  // });
 });
 
 app.listen(4004, () => {

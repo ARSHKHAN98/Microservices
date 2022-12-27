@@ -21,12 +21,13 @@ app.get("/users", (req, res) => {
 });
 
 app.get("/users/:id", (req, res) => {
-  res.send(users[id]);
+  res.send(users[req.params.id]);
 });
 
 app.post("/users/:id", (req, res) => {
   const { id, name, points } = req.body;
   users[id] = { id, name, points };
+  console.log(users[id]);
   res.send(users[id]);
 });
 
@@ -40,15 +41,6 @@ app.post("/users", async (req, res) => {
     name,
     points: 0,
   };
-
-  await axios.post("http://localhost:4005/events", {
-    type: "UserCreated",
-    data: {
-      id,
-      name,
-      points,
-    },
-  });
 
   res.status(201).send(users[id]);
 });
